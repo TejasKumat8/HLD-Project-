@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SearchIQ – Smart Typeahead System</title>
+  <meta name="description" content="A high-performance search typeahead system with consistent hashing, trending searches, and batch writes." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Animated background -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- ── HEADER ─────────────────────────────────── -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">SearchIQ</span>
+    </div>
+    <div class="header-badges">
+      <span class="badge badge-green" id="statusBadge">● Connected</span>
+      <span class="badge badge-blue" id="cacheBadge">Cache: 0%</span>
+    </div>
+  </header>
+
+  <!-- ── HERO ───────────────────────────────────── -->
+  <main class="main-content">
+    <section class="hero">
+      <h1 class="hero-title">
+        Intelligent Search
+        <span class="gradient-text">Typeahead</span>
+      </h1>
+      <p class="hero-subtitle">
+        Distributed caching · Consistent hashing · Trending signals · Batch writes
+      </p>
+
+      <!-- Search Box -->
+      <div class="search-container" id="searchContainer">
+        <div class="search-mode-tabs">
+          <button class="mode-tab active" id="tabBasic" data-mode="basic">
+            📊 Historical
+          </button>
+          <button class="mode-tab" id="tabTrending" data-mode="trending">
+            🔥 Trending
+          </button>
+        </div>
+
+        <div class="search-box-wrapper">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="Start typing to search…"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Search input"
+            aria-autocomplete="list"
+            aria-controls="suggestionsList"
+          />
+          <button class="search-btn" id="searchBtn" aria-label="Submit search">
+            Search
+          </button>
+          <div class="latency-chip" id="latencyChip" style="display:none">
+            <span id="latencyValue">—</span>ms
+          </div>
+        </div>
+
+        <!-- Suggestions Dropdown -->
+        <div class="suggestions-panel" id="suggestionsPanel" role="listbox" aria-label="Search suggestions" style="display:none">
+          <div class="suggestions-header">
+            <span id="sourceLabel" class="source-label"></span>
+            <span id="suggCount" class="sugg-count"></span>
+          </div>
+          <ul class="suggestions-list" id="suggestionsList"></ul>
+          <div class="loading-spinner" id="loadingSpinner" style="display:none">
+            <div class="spinner"></div> Fetching suggestions…
+          </div>
+          <div class="no-results" id="noResults" style="display:none">
+            No suggestions found for "<span id="noResultsQuery"></span>"
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Result Banner -->
+      <div class="search-result-banner" id="searchResultBanner" style="display:none">
+        <div class="result-icon">✅</div>
+        <div>
+          <div class="result-title">Search recorded!</div>
+          <div class="result-subtitle" id="resultQuery"></div>
+        </div>
+        <button class="result-close" id="resultClose">✕</button>
+      </div>
+    </section>
+
+    <!-- ── TRENDING + STATS ROW ──────────────────── -->
+    <section class="panels-row">
+
+      <!-- Trending Panel -->
+      <div class="panel" id="trendingPanel">
+        <div class="panel-header">
+          <span class="panel-icon">🔥</span>
+          <h2 class="panel-title">Trending Searches</h2>
+          <button class="panel-refresh" id="trendingRefresh" title="Refresh">↻</button>
+        </div>
+        <ul class="trending-list" id="trendingList">
+          <li class="trending-empty">Search for something to see trends!</li>
+        </ul>
+      </div>
+
+      <!-- Stats Panel -->
+      <div class="panel" id="statsPanel">
+        <div class="panel-header">
+          <span class="panel-icon">📈</span>
+          <h2 class="panel-title">Live Metrics</h2>
+          <button class="panel-refresh" id="statsRefresh" title="Refresh">↻</button>
+        </div>
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <div class="stat-value" id="statHitRate">—</div>
+            <div class="stat-label">Cache Hit Rate</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statP95">—</div>
+            <div class="stat-label">p95 Latency</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statBatches">—</div>
+            <div class="stat-label">Batch Flushes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statWritesSaved">—</div>
+            <div class="stat-label">Writes Saved</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CACHE DEBUG ──────────────────────────── -->
+    <section class="panel cache-debug-panel">
+      <div class="panel-header">
+        <span class="panel-icon">🗄️</span>
+        <h2 class="panel-title">Cache Debug – Consistent Hashing</h2>
+      </div>
+      <div class="cache-debug-body">
+        <div class="cache-input-row">
+          <input
+            type="text"
+            id="cacheDebugInput"
+            class="cache-debug-input"
+            placeholder="Enter a prefix to inspect cache routing…"
+          />
+          <button class="cache-debug-btn" id="cacheDebugBtn">Inspect</button>
+        </div>
+        <div class="cache-result" id="cacheResult" style="display:none">
+          <div class="cache-result-grid" id="cacheResultGrid"></div>
+          <div class="node-visualization" id="nodeViz"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── BATCH WRITER PANEL ───────────────────── -->
+    <section class="panel batch-panel">
+      <div class="panel-header">
+        <span class="panel-icon">📦</span>
+        <h2 class="panel-title">Batch Write Monitor</h2>
+        <button class="panel-refresh flush-btn" id="manualFlushBtn">⚡ Force Flush</button>
+      </div>
+      <div class="batch-body" id="batchBody">
+        <div class="batch-stats-row" id="batchStatsRow"></div>
+        <div class="flush-log" id="flushLog">
+          <div class="flush-log-title">Recent Flush History</div>
+          <div id="flushLogEntries" class="flush-log-entries">
+            <div class="flush-empty">No flushes yet. Submit some searches!</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── FOOTER ──────────────────────────────────── -->
+  <footer class="footer">
+    <p>SearchIQ – Search Typeahead System · Built with Flask · Python 3 · SQLite · Consistent Hashing</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

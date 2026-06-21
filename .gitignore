@@ -1,0 +1,6 @@
+data/queries.db
+data/queries.csv
+__pycache__/
+*.pyc
+*.pyo
+.env
