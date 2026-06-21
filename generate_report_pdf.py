@@ -58,7 +58,7 @@ def try_reportlab():
         h2_style = ParagraphStyle("H2", parent=styles["Heading2"], textColor=h2_color, fontSize=14, spaceBefore=16, spaceAfter=6)
         h3_style = ParagraphStyle("H3", parent=styles["Heading3"], fontSize=11, spaceBefore=10, spaceAfter=4)
         body_style = ParagraphStyle("Body", parent=styles["Normal"], fontSize=10, leading=14, spaceAfter=6)
-        code_style = ParagraphStyle("Code", parent=styles["Code"], fontSize=8, leading=11, backColor=colors.HexColor("#1e1e2e"), textColor=colors.HexColor("#cdd6f4"), leftIndent=12, rightIndent=12, spaceBefore=6, spaceAfter=6, borderPadding=(6,6,6,6))
+        code_style = ParagraphStyle("Code", parent=styles["Code"], fontSize=9, leading=12, backColor=colors.HexColor("#f1f5f9"), textColor=colors.HexColor("#0f172a"), leftIndent=12, rightIndent=12, spaceBefore=6, spaceAfter=6, borderPadding=(6,6,6,6), fontName="Courier-Bold")
 
         with open("report.md", encoding="utf-8") as f:
             lines = f.readlines()
