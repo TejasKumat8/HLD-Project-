@@ -49,8 +49,16 @@
                                       └─────────────────┘
 ```
 
-### System Screenshot
-![SearchIQ Screenshot](screenshot.png)
+### System Screenshots
+
+**1. Main Typeahead & Trending UI:**
+![SearchIQ Main UI](screenshot.png)
+
+**2. Consistent Hashing (Cache Routing):**
+![Cache Debug Routing](screenshot2.png)
+
+**3. Batch Write Monitor (Write Reduction):**
+![Batch Write Buffer](screenshot3.png)
 
 ### Component Responsibilities
 

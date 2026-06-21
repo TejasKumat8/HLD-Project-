@@ -237,7 +237,14 @@ View routing with: `GET /cache/debug?prefix=<your_prefix>`
 
 ## Screenshots
 
-![SearchIQ Screenshot](screenshot.png)
+**Main Typeahead & Trending UI:**
+![SearchIQ Main UI](screenshot.png)
+
+**Consistent Hashing (Cache Debug):**
+![Cache Debug Routing](screenshot2.png)
+
+**Batch Write Monitor (Flush History):**
+![Batch Write Buffer](screenshot3.png)
 
 ---
 
