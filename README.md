@@ -237,7 +237,7 @@ View routing with: `GET /cache/debug?prefix=<your_prefix>`
 
 ## Screenshots
 
-_Run the app and open http://localhost:5000 to see the UI._
+![SearchIQ Screenshot](screenshot.png)
 
 ---
 

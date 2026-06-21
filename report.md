@@ -49,6 +49,9 @@
                                       └─────────────────┘
 ```
 
+### System Screenshot
+![SearchIQ Screenshot](screenshot.png)
+
 ### Component Responsibilities
 
 | Component | File | Role |

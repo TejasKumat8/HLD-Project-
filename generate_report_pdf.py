@@ -135,6 +135,20 @@ def try_reportlab():
                 story.append(Paragraph(stripped[4:], h3_style))
             elif stripped.startswith("---"):
                 story.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor("#e0e7ff")))
+            elif stripped.startswith("!["):
+                # Parse image
+                import re
+                m = re.match(r'!\[.*?\]\((.*?)\)', stripped)
+                if m:
+                    img_path = m.group(1)
+                    from reportlab.platypus import Image
+                    try:
+                        # Make it fit within the page width
+                        img = Image(img_path, width=15*cm, height=8*cm, kind='proportional')
+                        story.append(img)
+                        story.append(Spacer(1, 10))
+                    except Exception as e:
+                        print(f"Failed to load image: {e}")
             elif stripped.strip() == "":
                 story.append(Spacer(1, 6))
             else:
